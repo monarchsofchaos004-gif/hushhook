@@ -68,11 +68,6 @@ glob: secrets.yaml
 matches: config/secrets.yml
 ignores: secrets.md
 
-id: pulumi-credentials
-glob: .pulumi/credentials.json
-matches: ~/.pulumi/credentials.json
-ignores: .pulumi/credentials.example.json
-
 id: sentryclirc
 glob: .sentryclirc
 matches: ~/.sentryclirc

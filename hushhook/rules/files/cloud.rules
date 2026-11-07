@@ -20,6 +20,12 @@ matches: deploy/service-account.json
 matches: prod-service-account.json
 ignores: service-accounts.md
 
+# Before google-oauth-credentials: both match this path, and the first match names the rule.
+id: pulumi-credentials
+glob: .pulumi/credentials.json
+matches: ~/.pulumi/credentials.json
+ignores: .pulumi/credentials.example.json
+
 id: google-oauth-credentials
 glob: credentials.json
 glob: client_secret*.json

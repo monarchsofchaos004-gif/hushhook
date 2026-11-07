@@ -150,6 +150,10 @@ class RuleFormat(unittest.TestCase):
         self.assertTrue(rules[0].hits("/app/.env.local"))
         self.assertFalse(rules[0].hits("/app/.env.example"))
 
+    def test_pulumi_credentials_name_the_right_service(self):
+        hit = next(rule for rule in load_rules({}).files if rule.hits("/home/me/.pulumi/credentials.json"))
+        self.assertEqual(hit.id, "pulumi-credentials")
+
     def test_folder_globs_match_the_end_of_the_path(self):
         rules, _ = parse_text("id: x\nglob: .aws/credentials\nmatches: .aws/credentials\n", "files")
         self.assertTrue(rules[0].hits("/root/.aws/credentials"))

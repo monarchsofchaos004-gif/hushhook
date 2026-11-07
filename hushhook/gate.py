@@ -116,7 +116,7 @@ def _big_file_reason(path, limit):
     return (
         "hushhook stopped a big dump: %s has more than %d lines. Narrow it first: "
         "read a range, search with grep, or run `hushhook map %s` for an outline of a "
-        "Python or shell file." % (path, limit, path)
+        "supported source file." % (path, limit, path)
     )
 
 

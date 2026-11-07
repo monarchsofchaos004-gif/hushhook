@@ -67,7 +67,7 @@ DATABASE_URL=postgres://app:[hushhook:database-url-password]@db.example.com/app
 $ cat build.log
 hushhook stopped a big dump: build.log has more than 300 lines. Narrow it first:
 read a range, search with grep, or run `hushhook map build.log` for an outline
-of a Python or shell file.
+of a supported source file.
 ```
 
 代理想做無法復原的事：
@@ -140,7 +140,7 @@ hushhook 的目的是減少意外，不是提供保證，它的極限值得先�
 
 ## 用更少的內容讀程式
 
-支援 Python 和 shell。`map` 不會顯示函式內容；`peek` 會拿掉註解、字串只顯示 `"..."`，要看再另外指定。
+支援 Python、shell 和 Go。`map` 不會顯示函式內容；`peek` 會拿掉註解、字串只顯示 `"..."`，要看再另外指定。
 
 ```text
 $ hushhook map hushhook/hook.py
