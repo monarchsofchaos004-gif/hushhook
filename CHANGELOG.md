@@ -2,6 +2,7 @@
 
 ## 0.1.1 - Unreleased
 
+- The Go outline in `hushhook map` (and peek, refs, doc) now lists generic functions (`Map[T any]`), methods with unnamed receivers (`(*Server) Stop`) and methods on generic types (`(s *Stack[T]) Push`).
 - New secret rule for Shopify Admin API access tokens (`shpat_`, `shpca_`, `shppa_`, `shpss_`); short or non-hex lookalikes stay unmasked.
 - `hushhook explain <rule-id>`: shows where a rule lives, how to turn it off, and a ready link to report a wrong match (only the rule id goes in the link).
 - When a read or command is blocked, the message now tells the agent that the user can run `hushhook explain <rule-id>`.

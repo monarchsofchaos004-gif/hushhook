@@ -30,8 +30,8 @@ _SH_PLAIN_VAR = re.compile(r"^\"\$\{?\w+\}?\"$")
 
 _GO_DEF = re.compile(
     r"^\s*func\s+"
-    r"(?:\(\s*[A-Za-z_]\w*\s+\*?(?P<type>[A-Za-z_]\w*)\s*\)\s*)?"
-    r"(?P<name>[A-Za-z_]\w*)\s*\("
+    r"(?:\(\s*(?:[A-Za-z_]\w*\s+)?\*?(?P<type>[A-Za-z_]\w*)\s*(?:\[[^\]]*\])?\s*\)\s*)?"
+    r"(?P<name>[A-Za-z_]\w*)\s*(?:\[[^\]]*\])?\s*\("
 )
 _GO_STRING = re.compile(r'"(?:[^"\\]|\\.)*"|`[^`]*`')
 _GO_RUNE = re.compile(r"'(?:[^'\\]|\\.)*'")

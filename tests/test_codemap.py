@@ -65,6 +65,51 @@ func add(a, b int) int {
 }
 '''
 
+GO_GENERIC = '''package main
+
+// Plain does nothing special.
+func Plain() {
+    return
+}
+
+// Map applies f to every item.
+func Map[T any](items []T, f func(T) T) []T {
+    out := make([]T, 0, len(items))
+    for _, item := range items {
+        out = append(out, f(item))
+    }
+    return out
+}
+
+// Pair swaps the two values.
+func Pair[K comparable, V any](k K, v V) (K, V) {
+    return v, k
+}
+
+// Stop halts the server.
+func (*Server) Stop() {
+    // nothing here
+}
+
+// Name labels the server.
+func (Server) Name() string {
+    return "server"
+}
+
+// Push adds a value to the stack.
+func (s *Stack[T]) Push(v T) {
+    s.items = append(s.items, v)
+}
+
+// Start boots the server.
+func (s *Server) Start(port int) error {
+    return s.ping()
+}
+
+// ping checks the server.
+func (s *Server) ping() error { return nil }
+'''
+
 class CodeMap(unittest.TestCase):
     def setUp(self):
         self.folder = tempfile.TemporaryDirectory()
@@ -204,6 +249,40 @@ class CodeMap(unittest.TestCase):
         self.assertIn("def L12-12 Server.ping()", text)
         self.assertIn("def L15-17 add(a, b)", text)
         self.assertIn("-> ping", text)
+
+    def test_go_outline_lists_generic_functions(self):
+        text = "\n".join(codemap.outline(self.write("main.go", GO_GENERIC)))
+        self.assertIn("def L9-15 Map(items, f)", text)
+        self.assertIn("def L18-20 Pair(k, v)", text)
+
+    def test_go_outline_lists_unnamed_receivers(self):
+        text = "\n".join(codemap.outline(self.write("main.go", GO_GENERIC)))
+        self.assertIn("def L23-25 Server.Stop()", text)
+        self.assertIn("def L28-30 Server.Name()", text)
+
+    def test_go_outline_lists_methods_on_generic_types(self):
+        text = "\n".join(codemap.outline(self.write("main.go", GO_GENERIC)))
+        self.assertIn("def L33-35 Stack.Push(v)", text)
+        self.assertIn("def L38-40 Server.Start(port)  -> ping", text)
+        self.assertIn("def L43-43 Server.ping()", text)
+
+    def test_go_peek_refs_doc_find_the_new_forms(self):
+        path = self.write("main.go", GO_GENERIC)
+        self.assertIn("return out", "\n".join(codemap.peek(path, "Map")))
+        self.assertNotIn("nothing here", "\n".join(codemap.peek(path, "Stop")))
+        self.assertIn("main.go:33  Stack.Push", codemap.references(self.home, "Push"))
+        text = "\n".join(codemap.docs(path))
+        self.assertIn("Map: Map applies f to every item.", text)
+        self.assertIn("Server.Stop: Stop halts the server.", text)
+        self.assertIn("Stack.Push: Push adds a value to the stack.", text)
+
+    def test_go_cli_map_lists_the_new_forms(self):
+        self.write("main.go", GO_GENERIC)
+        text = self.cli("map", "main.go").stdout
+        self.assertIn("def L9-15 Map(items, f)", text)
+        self.assertIn("def L23-25 Server.Stop()", text)
+        self.assertIn("def L28-30 Server.Name()", text)
+        self.assertIn("def L33-35 Stack.Push(v)", text)
 
     def test_go_peek_hides_comments_and_strings(self):
         text = "\n".join(codemap.peek(self.write("main.go", GO), "Start"))
